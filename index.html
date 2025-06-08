@@ -3,772 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hộp Thư Tình Yêu Lãng Mạn</title>
+    <title>Thư gửi em</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+        
         body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            font-family: 'EB Garamond', serif;
             min-height: 100vh;
-            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #ffd1ff, #ffb6c1);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: #f5e6d3;
+            background-image: 
+                linear-gradient(rgba(245, 230, 211, 0.9), rgba(245, 230, 211, 0.9)),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4c3b3' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             margin: 0;
-            overflow: hidden;
-        }
-        
-        .container {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-        }
-        
-        .love-box {
-            position: relative;
-            width: 500px;
-            height: 220px;
-            background: linear-gradient(45deg, #ff758c, #ff7eb3);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(255, 105, 140, 0.4);
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            cursor: pointer;
-            overflow: hidden;
-            transform-style: preserve-3d;
-            z-index: 10;
-            animation: glow 3s infinite;
+            color: #2c1810;
         }
-        
-        .love-box::before {
-            content: '';
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            perspective: 1000px;
+        }
+
+        .envelope {
+            width: 100%;
+            aspect-ratio: 1.6/1;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+        }
+
+        .envelope.open {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-front, .envelope-back, .envelope-flap {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 L0,100 Z" /><path fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" d="M0,50 Q25,25 50,50 T100,50" /></svg>');
-            opacity: 0.5;
+            background: #fff5e6;
+            border: 2px solid #8b7355;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(139, 115, 85, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
         }
-        
-        .love-box.open {
-            height: 450px;
-            background: linear-gradient(to right, #ff6b6b, #ff8e8e);
-            transform: rotateY(10deg);
-            box-shadow: 0 15px 40px rgba(255, 105, 140, 0.6);
-        }
-        
-        .love-box .heart-lid {
-            position: absolute;
-            top: -15px;
-            width: 500px;
-            height: 30px;
-            background: linear-gradient(to right, #ff5e62, #ff9966);
-            border-radius: 15px 15px 0 0;
-            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transform-origin: bottom;
+
+        .envelope-front {
+            background: linear-gradient(45deg, #fff5e6, #f5e6d3);
+            transform: rotateX(0deg);
             z-index: 2;
         }
-        
-        .love-box.open .heart-lid {
+
+        .envelope-back {
+            background: #fff5e6;
             transform: rotateX(180deg);
-            opacity: 0.8;
         }
-        
+
+        .envelope-flap {
+            top: 0;
+            transform-origin: top;
+            transition: transform 0.5s ease;
+            background: linear-gradient(45deg, #f5e6d3, #fff5e6);
+            clip-path: polygon(0 0, 50% 50%, 100% 0);
+            height: 50%;
+            border-bottom: none;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
         .letter {
-            display: none;
+            position: absolute;
             width: 90%;
-            height: 85%;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            margin-top: 20px;
-            font-style: italic;
-            color: #555;
-            transform: translateY(20px);
-            transition: all 0.5s ease 0.2s;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .letter.show {
-            display: block;
-            transform: translateY(0);
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        .buttons {
-            margin-top: 30px;
-            display: flex;
-            gap: 15px;
-        }
-        
-        button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 105, 140, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 7px 20px rgba(255, 105, 140, 0.6);
-        }
-        
-        button:active {
-            transform: translateY(1px);
-        }
-        
-        button::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transform: rotate(45deg);
-            animation: shimmer 2s infinite;
-        }
-        
-        h1 {
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            font-weight: 700;
-            background: linear-gradient(to right, #ffffff, #ffecec);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .floating-hearts {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .heart {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6b6b"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center center;
+            background: #fff;
+            padding: 30px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             opacity: 0;
-            animation: float-up 4s linear infinite;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            background-image: 
+                linear-gradient(90deg, rgba(207, 184, 155, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(207, 184, 155, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
-        
-        .firework-container {
+
+        .letter.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .letter-content {
+            opacity: 0;
+        }
+
+        .letter-content.show {
+            opacity: 1;
+        }
+
+        .typing-text {
+            display: block;
+            opacity: 0;
+            margin: 15px 0;
+            min-height: 1.5em;
+            position: relative;
+        }
+
+        .typing-text.active {
+            opacity: 1;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background-color: #8b7355;
+            margin-left: 2px;
+            vertical-align: middle;
+            animation: blink 0.7s infinite;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #8b7355;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            text-align: right;
+            margin-top: 30px;
+            color: #8b7355;
+        }
+
+        .envelope-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #8b7355;
+            text-align: center;
+            transform: rotate(-5deg);
+        }
+
+        .hearts-container {
             position: fixed;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 1;
             top: 0;
             left: 0;
+            pointer-events: none;
+            z-index: 1;
         }
-        
-        .firework {
+
+        .floating-heart {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            font-size: 20px;
+            color: #ff6b6b;
+            animation: floatUp 4s ease-in-out infinite;
+            opacity: 0;
+            text-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
+        }
+
+        .stamp {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 75px;
+            border: 2px solid #8b7355;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(5deg);
+        }
+
+        .stamp::after {
+            content: '♥';
+            font-size: 30px;
+            color: #8b7355;
+        }
+
+        .wax-seal {
+            position: absolute;
+            bottom: 20%;
+            right: 20%;
+            width: 50px;
+            height: 50px;
+            background: #8b7355;
             border-radius: 50%;
-            box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
-            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff5e6;
+            font-family: 'Dancing Script', cursive;
+            font-size: 24px;
+            transform: rotate(-15deg);
+            box-shadow: 0 2px 5px rgba(139, 115, 85, 0.3);
         }
-        
-        .firework-particle {
-            animation: firework-explode 1.2s ease-out forwards;
-        }
-        
-        .firework-spark {
-            animation: spark-trail 0.8s ease-out forwards;
-        }
-        
-        .firework-ring {
-            animation: ring-expand 1s ease-out forwards;
-            border: 2px solid;
-            border-radius: 50%;
-            width: 10px;
-            height: 10px;
-        }
-        
-        .firework-star {
-            animation: star-burst 1.5s ease-out forwards;
-        }
-        
-        .firework-heart {
-            width: 12px;
-            height: 12px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center center;
-            background-size: contain;
-            animation: heart-burst 1.8s ease-out forwards;
-        }
-        
-        .music-control {
+
+        .music-player {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 8px 25px rgba(255, 105, 140, 0.3);
-            z-index: 100;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .music-control:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(255, 105, 140, 0.4);
-        }
-        
-        .music-player {
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            min-width: 280px;
+            transform: translateX(120%);
+            transition: transform 0.5s ease;
         }
-        
+
+        .music-player.show {
+            transform: translateX(0);
+        }
+
         .music-title {
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 0.9rem;
             color: #ff6b6b;
-            text-align: center;
-            margin-bottom: 5px;
+            font-weight: 600;
+            margin: 0;
         }
-        
-        .music-player audio {
-            width: 100%;
-            height: 40px;
-            border-radius: 8px;
-            outline: none;
+
+        .music-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
-        
-        .music-player audio::-webkit-media-controls-panel {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            border-radius: 8px;
-        }
-        
-        .music-toggle {
+
+        .music-btn {
             background: none;
             border: none;
-            font-size: 20px;
             color: #ff6b6b;
             cursor: pointer;
+            font-size: 1.2rem;
             padding: 5px;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
         }
-        
-        .music-toggle:hover {
-            background: rgba(255, 107, 107, 0.1);
+
+        .music-btn:hover {
             transform: scale(1.1);
         }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        @keyframes float-up {
-            0% { 
-                transform: translateY(100vh) scale(0.5); 
-                opacity: 0; 
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
             }
-            10% { 
-                opacity: 0.8; 
-            }
-            90% { 
-                opacity: 0.8; 
-            }
-            100% { 
-                transform: translateY(-100px) scale(1.2); 
-                opacity: 0; 
-            }
-        }
-        
-        @keyframes firework-explode {
-            0% { 
-                transform: scale(0) rotate(0deg);
+            10% {
                 opacity: 1;
             }
-            100% { 
-                transform: scale(15) rotate(360deg);
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) scale(1.5);
                 opacity: 0;
             }
         }
-        
-        @keyframes spark-trail {
-            0% { 
-                transform: scale(0);
-                opacity: 1;
-                box-shadow: 0 0 10px currentColor;
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
             }
-            20% {
-                transform: scale(1);
-                opacity: 1;
+
+            .container {
+                max-width: 100%;
             }
-            100% { 
-                transform: scale(8) translateX(var(--spark-x, 0)) translateY(var(--spark-y, 0));
-                opacity: 0;
-                box-shadow: 0 0 30px currentColor;
+
+            .envelope {
+                width: 100%;
+                aspect-ratio: 1.4/1;
             }
-        }
-        
-        @keyframes ring-expand {
-            0% { 
-                transform: scale(0);
-                opacity: 1;
-                box-shadow: 0 0 20px currentColor;
+
+            .letter {
+                padding: 15px;
+                font-size: 0.95rem;
+                line-height: 1.6;
             }
-            50% {
-                opacity: 0.8;
-                box-shadow: 0 0 40px currentColor;
+
+            .typing-text {
+                font-size: 0.95rem;
             }
-            100% { 
-                transform: scale(25);
-                opacity: 0;
-                box-shadow: 0 0 80px currentColor;
+
+            h3.typing-text {
+                font-size: 1.6rem;
             }
-        }
-        
-        @keyframes star-burst {
-            0% { 
-                transform: scale(0) rotate(0deg);
-                opacity: 1;
-                box-shadow: 0 0 15px currentColor;
+
+            .signature {
+                font-size: 1.3rem;
+                margin-top: 20px;
             }
-            30% {
-                transform: scale(1.5) rotate(180deg);
-                opacity: 1;
-                box-shadow: 0 0 25px currentColor;
+
+            .envelope-text {
+                font-size: 1.4rem;
             }
-            100% { 
-                transform: scale(12) rotate(720deg);
-                opacity: 0;
-                box-shadow: 0 0 60px currentColor;
+
+            .stamp {
+                width: 40px;
+                height: 50px;
+                top: 10px;
+                right: 10px;
             }
-        }
-        
-        @keyframes heart-burst {
-            0% { 
-                transform: scale(0);
-                opacity: 1;
-                filter: brightness(1.5) drop-shadow(0 0 10px currentColor);
+
+            .wax-seal {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
             }
-            40% {
-                transform: scale(1.2);
-                opacity: 1;
-                filter: brightness(2) drop-shadow(0 0 20px currentColor);
+
+            .music-player {
+                padding: 8px;
+                bottom: 5px;
+                right: 5px;
             }
-            100% { 
-                transform: scale(8) translateY(-100px);
-                opacity: 0;
-                filter: brightness(0.5) drop-shadow(0 0 40px currentColor);
+
+            .music-title {
+                font-size: 0.8rem;
             }
-        }
-        
-        /* Cập nhật typing animation styles */
-        .typing-text {
-            display: block;
-            overflow: hidden;
-            white-space: pre-wrap;
-            margin: 0;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        }
-        
-        .typing-text.active {
-            opacity: 1;
-            transform: translateY(0);
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-        }
-        
-        .typing-text span {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-        }
-        
-        .typing-text.active span {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Thêm animation cho trái tim đập */
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.3); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.3); }
-            70% { transform: scale(1); }
-            100% { transform: scale(1); }
-        }
-        
-        .hearts-container {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px 0;
-        }
-        
-        .hearts-container .heart {
-            display: inline-block;
-            margin: 0 15px;
-            font-size: 35px;
-        }
-        
-        .hearts-container .heart i {
-            color: #ff6b6b;
-            animation: heartBeat 1.5s ease-in-out infinite;
-        }
-        
-        .hearts-container .heart:nth-child(2) i {
-            color: #ff8e8e;
-            animation-delay: 0.5s;
-        }
-        
-        .hearts-container .heart:nth-child(3) i {
-            color: #ff6b6b;
-            animation-delay: 1s;
-        }
-        
-        /* Thêm hiệu ứng lấp lánh */
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0); }
-            50% { opacity: 1; transform: scale(1); }
-        }
-        
-        .sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background-color: #fff;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        /* Hiệu ứng ánh sáng cho hộp thư */
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 10px 30px rgba(255, 105, 140, 0.4); }
-            50% { box-shadow: 0 10px 50px rgba(255, 105, 140, 0.8); }
-        }
-        
-        /* Hiệu ứng gradient động cho background */
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .fixed-hearts {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding: 20px 0;
-        }
-        
-        .fixed-hearts i {
-            font-size: 35px;
-            color: #ff6b6b;
-        }
-        
-        .heart1 {
-            animation: simpleBeat 1.5s ease-in-out infinite;
-        }
-        
-        .heart2 {
-            animation: simpleBeat 1.5s ease-in-out infinite 0.5s;
-            color: #ff8e8e !important;
-        }
-        
-        .heart3 {
-            animation: simpleBeat 1.5s ease-in-out infinite 1s;
-        }
-        
-        @keyframes simpleBeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
+
+            .floating-heart {
+                font-size: 16px;
+            }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="floating-hearts" id="floatingHearts"></div>
-    <div class="firework-container" id="fireworkContainer"></div>
+    <div class="hearts-container" id="heartsContainer"></div>
     
     <div class="container">
-        <h1>Hộp Thư Trái Tim</h1>
-        
-        <div class="love-box" id="loveBox">
-            <div class="heart-lid"></div>
-            <div class="letter" id="letter">
-                <h3 style="text-align: center; color: #ff6b6b; margin-bottom: 20px;" class="typing-text">Chào Thủy ☀️</h3>
-                
-                <p class="typing-text">Chúc em buổi sáng 9/6 thật vui 🌼. Tình cờ thấy hôm nay là "cửu lục" – nghe có vẻ hay ho nên lấy cớ nhắn vài dòng 😊</p>
-                
-                <p class="typing-text">Mới trò chuyện vài ngày thôi mà anh thấy em rất thú vị 🤍 Có kiểu năng lượng tích cực dễ khiến người khác muốn nhắn thêm vài câu nữa.</p>
-                
-                <p class="typing-text">Cũng chưa biết sau này sẽ như nào, nhưng nếu em cũng thấy vui khi nói chuyện với anh, thì cứ từ từ tìm hiểu nhau nha. Nhẹ nhàng, không vội, như ngày hôm nay thôi 🐢✨</p>
-                
-                <p class="typing-text">Chúc em một ngày đầu tuần nhẹ nhàng và nhiều nụ cười 💫</p>
-                
-                <p style="text-align: right; margin-top: 30px; font-weight: bold;" class="typing-text">Nam 🙂</p>
-                
-                <div class="fixed-hearts" style="text-align: center; margin-top: 30px;">
-                    <i class="fas fa-heart heart1"></i>
-                    <i class="fas fa-heart heart2"></i>
-                    <i class="fas fa-heart heart3"></i>
+        <div class="envelope" id="envelope">
+            <div class="envelope-front">
+                <div class="envelope-text">DEAR THUY</div>
+                <div class="stamp"></div>
+            </div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-back">
+                <div class="wax-seal">N</div>
+                <div class="letter" id="letter">
+                    <div class="letter-content" id="letterContent">
+                        <h3 class="typing-text">Chào Thủy ☀️</h3>
+                        <p class="typing-text">Chúc em buổi sáng 9/6 thật vui vẻ 🌼. Tình cờ thấy hôm nay là "cửu lục" – nghe có vẻ hay ho nên lấy cớ nhắn vài dòng chân thànhành😊</p>
+                        <p class="typing-text">Mới trò chuyện vài hômhôm thôi mà anh thấy em rất thú vị 🤍. KKiểu có năng lượng tích cực dễ khiến người khác muốn nhắn thêm vài câu nữa.</p>
+                        <p class="typing-text">Cũng chưa biết sau này sẽ như nào, nhưng nếu em cũng thấy vui khi nói chuyện với anh, thì cứ từ từ tìm hiểu nhau nha. Nhẹ nhàng, không vội, như ngày hôm nay thôi 🐢✨</p>
+                        <p class="typing-text">Chúc em một ngày đầu tuần nhẹ nhàng, suôn sẻ và có nhiều nụ cười nhanha 💫</p>
+                        <p class="typing-text signature">Nam 🙂</p>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="buttons">
-            <button id="openBtn"><i class="fas fa-heart" style="margin-right: 8px;"></i> Mở Trái Tim</button>
-            <button id="closeBtn"><i class="fas fa-lock" style="margin-right: 8px;"></i> Đóng Lại</button>
-        </div>
     </div>
-    
-    <div class="music-control" id="musicControl">
-        <div class="music-player">
-            <div class="music-title">♪ Một Đời - 14 Casper & Bon Nghiêm ♪</div>
-            <audio id="bgMusic" controls>
-                <source src="MotDoi-14CasperBonNghiem-8776989.mp3" type="audio/mp3">
-                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-                Trình duyệt không hỗ trợ audio.
-            </audio>
-            <button class="music-toggle" id="musicToggle">
-                <i class="fas fa-expand-alt"></i>
+
+    <div class="music-player" id="musicPlayer">
+        <p class="music-title">♪ Một Đời - 14 Casper & Bon ♪</p>
+        <div class="music-controls">
+            <button class="music-btn" id="playBtn">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="music-btn" id="pauseBtn" style="display: none;">
+                <i class="fas fa-pause"></i>
             </button>
         </div>
+        <audio id="bgMusic" loop>
+            <source src="MotDoi-14CasperBonNghiem-8776989.mp3" type="audio/mp3">
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        </audio>
     </div>
 
     <script>
-        const loveBox = document.getElementById('loveBox');
-        const letter = document.getElementById('letter');
-        const openBtn = document.getElementById('openBtn');
-        const closeBtn = document.getElementById('closeBtn');
-        const floatingHearts = document.getElementById('floatingHearts');
-        const fireworkContainer = document.getElementById('fireworkContainer');
-        const musicControl = document.getElementById('musicControl');
-        const bgMusic = document.getElementById('bgMusic');
-        let isMusicPlaying = false;
-        
-        // Tạo trái tim bay
-        function createHearts() {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = 3 + Math.random() * 7 + 's';
-            heart.style.opacity = Math.random() * 0.7 + 0.3;
-            heart.style.width = (10 + Math.random() * 20) + 'px';
-            heart.style.height = heart.style.width;
-            floatingHearts.appendChild(heart);
-            
-            setTimeout(() => heart.remove(), 10000);
-        }
-        
-        // Tạo pháo hoa đẹp mắt và đa dạng
-        function createFirework(centerX, centerY) {
-            const colors = ['#ff6b6b', '#ff8e8e', '#ff9999', '#ffb3b3'];
-            const particleCount = 12; // Giảm số lượng hạt
-            const burstRadius = 60; // Giảm bán kính nổ
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'firework';
-                
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.backgroundColor = color;
-                particle.style.color = color;
-                
-                const angle = (360 / particleCount) * i;
-                const radian = (angle * Math.PI) / 180;
-                const distance = burstRadius;
-                
-                const finalX = centerX + Math.cos(radian) * distance;
-                const finalY = centerY + Math.sin(radian) * distance;
-                
-                particle.style.left = centerX + 'px';
-                particle.style.top = centerY + 'px';
-                
-                fireworkContainer.appendChild(particle);
-                
-                // Sử dụng requestAnimationFrame để animation mượt hơn
-                requestAnimationFrame(() => {
-                    particle.style.transform = `translate(${finalX - centerX}px, ${finalY - centerY}px) scale(0)`;
-                    particle.style.opacity = '0';
-                });
-                
-                setTimeout(() => particle.remove(), 800);
-            }
-        }
-        
-        // Thêm hiệu ứng lấp lánh
-        function createSparkle() {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
-            
-            const boxRect = loveBox.getBoundingClientRect();
-            const x = boxRect.left + Math.random() * boxRect.width;
-            const y = boxRect.top + Math.random() * boxRect.height;
-            
-            sparkle.style.left = x + 'px';
-            sparkle.style.top = y + 'px';
-            sparkle.style.animation = `sparkle ${1 + Math.random()}s ease-in-out`;
-            
-            document.body.appendChild(sparkle);
-            setTimeout(() => sparkle.remove(), 1000);
-        }
-        
-        // Cập nhật hàm typing effect
-        function startTypingAnimation() {
+        document.addEventListener('DOMContentLoaded', function() {
+            const envelope = document.getElementById('envelope');
+            const letter = document.getElementById('letter');
+            const letterContent = document.getElementById('letterContent');
             const typingTexts = document.querySelectorAll('.typing-text');
-            let delay = 0;
-            
-            typingTexts.forEach((text, index) => {
-                const originalContent = text.innerHTML;
-                text.textContent = '';
-                text.style.opacity = '1';
-                
-                let charIndex = 0;
-                const chars = originalContent.split('');
-                
-                function typeChar() {
-                    if (charIndex < chars.length) {
-                        text.innerHTML += chars[charIndex];
-                        charIndex++;
-                        setTimeout(typeChar, 50);
-                        
-                        if (chars[charIndex - 1] === '.' || chars[charIndex - 1] === '?' || charIndex === chars.length) {
-                            const boxRect = loveBox.getBoundingClientRect();
-                            const x = boxRect.left + (boxRect.width * Math.random());
-                            const y = boxRect.top - 150;
-                            setTimeout(() => createFirework(x, y), 200);
+            const heartsContainer = document.getElementById('heartsContainer');
+            const musicPlayer = document.getElementById('musicPlayer');
+            const bgMusic = document.getElementById('bgMusic');
+            const playBtn = document.getElementById('playBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            let isOpen = false;
+
+            async function typeText(element) {
+                return new Promise(resolve => {
+                    const text = element.textContent;
+                    element.textContent = '';
+                    element.style.opacity = '1';
+                    
+                    // Tạo cursor
+                    const cursor = document.createElement('span');
+                    cursor.className = 'cursor';
+                    element.appendChild(cursor);
+
+                    let currentText = '';
+                    let currentIndex = 0;
+
+                    function type() {
+                        if (currentIndex < text.length) {
+                            currentText += text[currentIndex];
+                            element.textContent = currentText;
+                            element.appendChild(cursor);
+                            currentIndex++;
+                            
+                            // Tốc độ đánh máy
+                            const delay = text[currentIndex - 1] === ' ' ? 150 : 100;
+                            setTimeout(type, delay);
+                        } else {
+                            setTimeout(() => {
+                                cursor.remove();
+                                resolve();
+                            }, 500);
                         }
                     }
-                }
-                
-                setTimeout(() => {
-                    typeChar();
-                    if (index === 0) {
-                        createFireworkSequence();
-                    }
-                }, delay);
-                
-                delay += originalContent.length * 50 + 800;
-            });
-        }
-        
-        // Cập nhật hàm mở hộp thư
-        openBtn.addEventListener('click', function() {
-            loveBox.classList.add('open');
-            letter.classList.add('show');
-            bgMusic.play(); // Tự động phát nhạc khi mở hộp thư
-            startTypingAnimation(); // Bắt đầu hiệu ứng typing
-            createFireworkSequence();
-        });
-        
-        // Cập nhật hàm đóng hộp thư
-        closeBtn.addEventListener('click', function() {
-            loveBox.classList.remove('open');
-            letter.classList.remove('show');
-            bgMusic.pause(); // Tạm dừng nhạc khi đóng hộp thư
-            bgMusic.currentTime = 0; // Reset thời gian phát về đầu
-            // Reset typing effect
-            document.querySelectorAll('.typing-text').forEach(text => {
-                text.classList.remove('active');
-            });
-        });
-        
-        // Tạo chuỗi pháo hoa hoành tráng
-        function createFireworkSequence() {
-            const boxRect = loveBox.getBoundingClientRect();
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            
-            // Tạo pháo hoa ở các vị trí cố định xung quanh hộp thư
-            const positions = [
-                { x: boxRect.left - 100, y: boxRect.top - 50 },
-                { x: boxRect.right + 100, y: boxRect.top - 50 },
-                { x: boxRect.left - 150, y: boxRect.top - 100 },
-                { x: boxRect.right + 150, y: boxRect.top - 100 }
-            ];
-            
-            // Tạo pháo hoa theo vị trí cố định
-            positions.forEach((pos, index) => {
-                setTimeout(() => {
-                    createFirework(pos.x, pos.y);
-                }, index * 800); // Tăng delay giữa các pháo hoa
-            });
-            
-            // Thêm pháo hoa ngẫu nhiên với tần suất thấp hơn
-            let fireworkInterval = setInterval(() => {
-                const x = Math.random() * windowWidth;
-                const y = Math.random() * (windowHeight * 0.3); // Giới hạn chiều cao
-                
-                const boxCenterX = boxRect.left + boxRect.width / 2;
-                const boxCenterY = boxRect.top + boxRect.height / 2;
-                const distanceFromBox = Math.sqrt(
-                    Math.pow(x - boxCenterX, 2) + 
-                    Math.pow(y - boxCenterY, 2)
-                );
-                
-                if (distanceFromBox > 300) {
-                    createFirework(x, y);
-                }
-            }, 2000);
-            
-            setTimeout(() => {
-                clearInterval(fireworkInterval);
-            }, 15000);
-        }
-        
-        // Tạo trái tim bay liên tục
-        setInterval(createHearts, 300);
-        
-        // Hiệu ứng khi di chuột vào hộp thư
-        loveBox.addEventListener('mouseenter', function() {
-            if (!loveBox.classList.contains('open')) {
-                loveBox.style.transform = 'scale(1.05) rotateY(5deg)';
+
+                    type();
+                });
             }
-        });
-        
-        loveBox.addEventListener('mouseleave', function() {
-            if (!loveBox.classList.contains('open')) {
-                loveBox.style.transform = 'scale(1) rotateY(0)';
+
+            // Mở/đóng phong bì
+            envelope.addEventListener('click', async function() {
+                if (!isOpen) {
+                    isOpen = true;
+                    envelope.classList.add('open');
+                    
+                    // Phát nhạc ngay khi mở phong bì
+                    musicPlayer.classList.add('show');
+                    bgMusic.play().catch(() => {
+                        console.log('Autoplay prevented');
+                    });
+                    playBtn.style.display = 'none';
+                    pauseBtn.style.display = 'block';
+                    
+                    setTimeout(async () => {
+                        letter.classList.add('show');
+                        letterContent.classList.add('show');
+                        
+                        // Đánh máy từng dòng tuần tự
+                        for (const text of typingTexts) {
+                            await typeText(text);
+                        }
+                    }, 1000);
+                } else {
+                    isOpen = false;
+                    envelope.classList.remove('open');
+                    letter.classList.remove('show');
+                    letterContent.classList.remove('show');
+                    
+                    // Reset lại nội dung
+                    typingTexts.forEach(text => {
+                        text.style.opacity = '0';
+                        text.textContent = text.getAttribute('data-original-text');
+                    });
+
+                    musicPlayer.classList.remove('show');
+                    bgMusic.pause();
+                    pauseBtn.style.display = 'none';
+                    playBtn.style.display = 'block';
+                }
+            });
+
+            // Lưu nội dung gốc
+            typingTexts.forEach(text => {
+                text.setAttribute('data-original-text', text.textContent);
+            });
+
+            // Điều khiển nhạc
+            playBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                bgMusic.play();
+                playBtn.style.display = 'none';
+                pauseBtn.style.display = 'block';
+            });
+
+            pauseBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                bgMusic.pause();
+                pauseBtn.style.display = 'none';
+                playBtn.style.display = 'block';
+            });
+
+            // Tạo nhiều trái tim bay với màu hồng
+            function createFloatingHeart() {
+                const colors = [
+                    '#ff6b6b',
+                    '#ff8e8e',
+                    '#ffb3b3',
+                    '#ff9eaa',
+                    '#ff7f92'
+                ];
+                
+                for (let i = 0; i < 3; i++) { // Tạo 3 trái tim cùng lúc
+                    const heart = document.createElement('i');
+                    heart.className = 'fas fa-heart floating-heart';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = 3 + Math.random() * 3 + 's';
+                    heart.style.opacity = Math.random() * 0.7 + 0.3;
+                    heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    heart.style.fontSize = (15 + Math.random() * 15) + 'px';
+                    heartsContainer.appendChild(heart);
+
+                    heart.addEventListener('animationend', () => heart.remove());
+                }
             }
+
+            // Tạo trái tim thường xuyên hơn
+            setInterval(createFloatingHeart, 300);
         });
     </script>
 </body>
